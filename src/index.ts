@@ -4,7 +4,7 @@
  * for specific repositories, and redirects other requests to the base URL.
  */
 
-const BaseUrl = `https://git.kolaente.de/vikunja`;
+const BaseUrl = `https://github.com/go-vikunja`;
 const Domain = `code.vikunja.io`;
 const GoGetTemplate = `<!doctype html>
 <html>
