@@ -49,6 +49,14 @@ export default {
 			}
 		}
 
+		if (path === '/desktop' || path === '/desktop/') {
+			return redirectToBase('/vikunja/tree/main/desktop');
+		}
+
+		if (path === '/frontend' || path === '/frontend/') {
+			return redirectToBase('/vikunja/tree/main/frontend');
+		}
+
 		// Default: redirect to base URL
 		return redirectToBase(path);
 	},
