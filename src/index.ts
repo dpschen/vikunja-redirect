@@ -36,28 +36,59 @@ export default {
 	async fetch(request: Request): Promise<Response> {
 		const url = new URL(request.url);
 		const path = url.pathname;
-
-		// Check if this is a repository path
+		// Split the pathname by '/' and remove empty items (leading slash, etc.)
 		const pathParts = path.split('/').filter(Boolean);
 
+		// -------------------------------------------------------------------
+		// 1) Handle single-segment paths that correspond to "go-get" repos.
+		//
+		//    That is, if someone does: `go get code.vikunja.io/vikunja`
+		//    or `go get code.vikunja.io/goget`, we serve the meta tags
+		//    so that "go get" knows which Git repo to use.
+		// -------------------------------------------------------------------
 		if (pathParts.length === 1) {
 			const repo = pathParts[0];
 
 			// Check if this is one of our special repositories
 			if (['goget', 'web', 'vikunja'].includes(repo)) {
-				return showGoGetMeta(path);
+				return showGoGetMeta(`/${repo}`);
 			}
 		}
 
-		if (path === '/desktop' || path === '/desktop/') {
-			return redirectToBase('/vikunja/tree/main/desktop');
+		// -------------------------------------------------------------------
+		// 2) Handle /desktop and all its subpaths.
+		//
+		//    Examples:
+		//    - /desktop          => https://github.com/go-vikunja/vikunja/tree/main/desktop
+		//    - /desktop/main.js  => https://github.com/go-vikunja/vikunja/tree/main/desktop/main.js
+		// -------------------------------------------------------------------
+		if (pathParts[0] === 'desktop') {
+			const subPath = pathParts.slice(1).join('/');
+			// If subPath is not empty, prepend '/'
+			const maybeSlash = subPath ? `/${subPath}` : '';
+			return redirectToBase(`/vikunja/tree/main/desktop${maybeSlash}`);
 		}
 
-		if (path === '/frontend' || path === '/frontend/') {
-			return redirectToBase('/vikunja/tree/main/frontend');
+		// -------------------------------------------------------------------
+		// 3) Handle /frontend and all its subpaths.
+		//
+		//    Examples:
+		//    - /frontend           => https://github.com/go-vikunja/vikunja/tree/main/frontend
+		//    - /frontend/lang/i18n => https://github.com/go-vikunja/vikunja/tree/main/frontend/lang/i18n
+		// -------------------------------------------------------------------
+		if (pathParts[0] === 'frontend') {
+			const subPath = pathParts.slice(1).join('/');
+			const maybeSlash = subPath ? `/${subPath}` : '';
+			return redirectToBase(`/vikunja/tree/main/frontend${maybeSlash}`);
 		}
 
-		// Default: redirect to base URL
+		// -------------------------------------------------------------------
+		// 4) Default fallback:
+		//    If nothing above applies, just redirect to the base URL
+		//    with the entire path appended. This ensures that any other
+		//    repos or subpaths which don't need special handling
+		//    still redirect to the correct GitHub path.
+		// -------------------------------------------------------------------
 		return redirectToBase(path);
 	},
 } satisfies ExportedHandler;
