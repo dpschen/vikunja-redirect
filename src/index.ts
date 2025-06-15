@@ -64,9 +64,8 @@ export default {
 		// -------------------------------------------------------------------
 		if (pathParts[0] === 'desktop') {
 			const subPath = pathParts.slice(1).join('/');
-			// If subPath is not empty, prepend '/'
-			const maybeSlash = subPath ? `/${subPath}` : '';
-			return redirectToBase(`/vikunja/tree/main/desktop${maybeSlash}`);
+			// Prepend '/' if there is a sub path
+			return redirectToBase(`/vikunja/tree/main/desktop${subPath ? `/${subPath}` : ''}`);
 		}
 
 		// -------------------------------------------------------------------
@@ -78,8 +77,7 @@ export default {
 		// -------------------------------------------------------------------
 		if (pathParts[0] === 'frontend') {
 			const subPath = pathParts.slice(1).join('/');
-			const maybeSlash = subPath ? `/${subPath}` : '';
-			return redirectToBase(`/vikunja/tree/main/frontend${maybeSlash}`);
+			return redirectToBase(`/vikunja/tree/main/frontend${subPath ? `/${subPath}` : ''}`);
 		}
 
 		// -------------------------------------------------------------------
