@@ -1,0 +1,23 @@
+name = "go-vikunja-vanity"
+main = "src/index.ts"
+compatibility_date = "2025-06-15"
+
+[vars]
+BASE_URL = "https://github.com/go-vikunja"
+DOMAIN   = "code.vikunja.io"
+
+[env.staging]
+route = "staging.code.vikunja.io/*"
+account_id = "ACCOUNT_ID_HERE"
+kv_namespaces = []
+[env.staging.vars]
+BASE_URL = "https://github.com/go-vikunja"
+DOMAIN   = "code-staging.vikunja.io"
+
+[env.production]
+route = "code.vikunja.io/*"
+account_id = "ACCOUNT_ID_HERE"
+kv_namespaces = []
+[env.production.vars]
+BASE_URL = "https://github.com/go-vikunja"
+DOMAIN   = "code.vikunja.io"
