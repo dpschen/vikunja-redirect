@@ -1,0 +1,3 @@
+Source URL,Target URL,Status Code
+https://old.example.com/foo,https://new.example.com/foo,308
+https://old.example.com/bar,https://new.example.com/bar,308
